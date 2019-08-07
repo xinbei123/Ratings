@@ -2,6 +2,11 @@
 <html>
 <head>
   <title>Ratings</title>
+</head>
+
+<body>
+  Ratings 
+  <hr>
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul class=flashes>
@@ -11,11 +16,6 @@
       </ul>
     {% endif %}
   {% endwith %}
-</head>
-
-<body>
-  Ratings
-  <hr>
 
   {% block content %} put your content here {% endblock %}
 

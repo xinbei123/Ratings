@@ -86,6 +86,20 @@ def login_process():
     flash('Logged in')
     return redirect(f"users/{user.user_id}")
 
+@app.route('/logout')
+def logout_process():
+    """logged out"""
+
+    del session['user_id']
+    flash('Logged out')
+    return redirect('/')
+
+@app.route('/users/<int:user_id>')
+def user_detail(user_id):
+    """show user details"""
+
+    user = User.query.get(user_id)
+    return render_template('user.html', user=user)
 
 
 if __name__ == "__main__":
