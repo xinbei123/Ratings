@@ -34,46 +34,57 @@ def user_list():
 
 @app.route('/register', methods=['GET'])
 def register_form():
+    """Show the registration form."""
 
     return render_template('register_form.html')
 
 
 @app.route('/register', methods=['POST'])
 def register_process():
-    print("\n\n\n\n\n\n\n\n******inside function")
+    """Process the registration form"""
+   
     email = request.form.get('email')
     password = request.form.get('password')
+    zipcode = request.form.get('zipcode')
+    age = request.form.get('age')
 
-    user = User()
-    user.email = email
-    user.password = password
+    new_user = User(email=email, password=password, 
+                    zipcode=zipcode, age=age)
 
     # We need to add to the session or it won't ever be stored
-    db.session.add(user)
+    db.session.add(new_user)
     # Once we're done, we should commit our work
     db.session.commit()
 
     return redirect('/')
 
-@app.route('/login')
+@app.route('/login', methods=['GET'])
 def login_form():
+    """Show login form"""
 
     return render_template('login_form.html')
 
-@app.route('/logged_In')
-def logged_in():
+@app.route('/login', methods=['POST'])
+def login_process():
+    """Process login"""
 
     email = request.form.get('email')
     password = request.form.get('password')
 
     user = User.query.filter(User.email == email).first()
-    # NEEDS DEBUGGIN
-    if user.password == password:
-    #flash message about success
-        return redirect('/')
-    else:
+    
+    if not user:
+        flash('Invalid user')
         return redirect('/login')
 
+    if user.password != password:
+        flash('Invalid password')
+        return redirect('/login')
+
+    session['user_id'] = user.user_id
+
+    flash('Logged in')
+    return redirect(f"users/{user.user_id}")
 
 
 
